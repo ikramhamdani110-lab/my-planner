@@ -121,8 +121,6 @@ export interface Note {
   updated_at: string;
 }
 
-export interface AccountInfo { id: number; name: string; theme: string }
-
 export interface SearchResults {
   tasks: { type: string; id: number; title: string; date?: string; status?: string }[];
   goals: { id: number; title: string; status?: string }[];
@@ -182,17 +180,8 @@ export interface ApiBridge {
   backupExportJson(): Promise<IpcResult>;
   backupImportJson(mode: 'merge' | 'restore'): Promise<IpcResult>;
   backupCopyDb(): Promise<IpcResult>;
-  backupRestoreDb(): Promise<IpcResult>;
   backupResetData(): Promise<IpcResult>;
   appInfo(): Promise<IpcResult<{ version: string; dbPath: string; platform: string }>>;
-  openPath(p: string): Promise<IpcResult>;
-  authAccounts(): Promise<IpcResult<{ id: number; name: string; theme: string }[]>>;
-  authLogin(p: { accountId: number; password: string }): Promise<IpcResult<AccountInfo>>;
-  authCreateAccount(p: { name: string; password: string; theme: string }): Promise<IpcResult<AccountInfo>>;
-  authLogout(): Promise<IpcResult>;
-  authDeleteAccount(accountId: number): Promise<IpcResult>;
-  authSession(): Promise<IpcResult<AccountInfo | null>>;
-  authSetTheme(theme: string): Promise<IpcResult>;
   searchAll(query: string): Promise<IpcResult<SearchResults>>;
   notificationsList(): Promise<IpcResult<any[]>>;
   notificationsUnreadCount(): Promise<IpcResult<number>>;

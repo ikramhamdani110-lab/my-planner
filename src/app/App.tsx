@@ -10,14 +10,13 @@ import { TasksPage } from '@/pages/Tasks/TasksPage';
 import { GoalsPage } from '@/pages/Goals/GoalsPage';
 import { StatisticsPage } from '@/pages/Statistics/StatisticsPage';
 import { NotesPage } from '@/pages/Notes/NotesPage';
-import { SettingsPage } from '@/pages/Settings/SettingsPage';
 import { api } from '@/services/api';
 import type { ThemeMode } from '@/types';
 import { initPlanner } from '@/services/plannerApi';
 
 const TITLES: Record<Page, string> = {
   home: 'Home', calendar: 'Calendar', tasks: 'Tasks', goals: 'Goals',
-  statistics: 'Statistics', notes: 'Notes', settings: 'Settings'
+  statistics: 'Statistics', notes: 'Notes'
 };
 
 function Shell() {
@@ -91,7 +90,6 @@ function Shell() {
           {page === 'goals' && <GoalsPage />}
           {page === 'statistics' && <StatisticsPage />}
           {page === 'notes' && <NotesPage />}
-          {page === 'settings' && <SettingsPage />}
         </main>
       </div>
       <ModalHost />

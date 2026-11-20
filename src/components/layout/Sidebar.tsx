@@ -1,7 +1,7 @@
 import React from 'react';
-import { LayoutDashboard, CalendarDays, ListChecks, Target, BarChart3, StickyNote, Settings as SettingsIcon, ChevronsLeft, ChevronsRight, X } from 'lucide-react';
+import { LayoutDashboard, CalendarDays, ListChecks, Target, BarChart3, StickyNote, ChevronsLeft, ChevronsRight, X } from 'lucide-react';
 
-export type Page = 'home' | 'calendar' | 'tasks' | 'goals' | 'statistics' | 'notes' | 'settings';
+export type Page = 'home' | 'calendar' | 'tasks' | 'goals' | 'statistics' | 'notes';
 
 const ITEMS: { id: Page; label: string; icon: React.ElementType }[] = [
   { id: 'home', label: 'Home', icon: LayoutDashboard },
@@ -9,8 +9,7 @@ const ITEMS: { id: Page; label: string; icon: React.ElementType }[] = [
   { id: 'tasks', label: 'Tasks', icon: ListChecks },
   { id: 'goals', label: 'Goals', icon: Target },
   { id: 'statistics', label: 'Statistics', icon: BarChart3 },
-  { id: 'notes', label: 'Notes', icon: StickyNote },
-  { id: 'settings', label: 'Settings', icon: SettingsIcon }
+  { id: 'notes', label: 'Notes', icon: StickyNote }
 ];
 
 /**

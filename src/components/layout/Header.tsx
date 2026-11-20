@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, Plus, Bell, Palette, Moon, Sun, Sunrise, ListChecks, Target, StickyNote } from 'lucide-react';
+import { Search, Plus, Bell, Palette, Moon, Sun, Sunrise, ListChecks, Target, StickyNote, DatabaseBackup, Download, Upload } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { api } from '@/services/api';
 import type { ThemeMode, SearchResults } from '@/types';
@@ -39,6 +39,13 @@ export function Header({ title, onQuickAdd, onSearchNavigate, onToggleSidebar }:
   const [showAdd, setShowAdd] = useState(false);
   const [showTheme, setShowTheme] = useState(false);
   const [showBell, setShowBell] = useState(false);
+  const [showData, setShowData] = useState(false);
+  const [notice, setNotice] = useState('');
+  useEffect(() => {
+    if (!notice) return;
+    const t = setTimeout(() => setNotice(''), 5000);
+    return () => clearTimeout(t);
+  }, [notice]);
   const [unread, setUnread] = useState(0);
   const [notifications, setNotifications] = useState<any[]>([]);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -87,13 +94,43 @@ export function Header({ title, onQuickAdd, onSearchNavigate, onToggleSidebar }:
       // inside a dropdown must NOT close (that broke Quick Add and the palette).
       if (el.closest('header')) return;
       if (el.closest('.modal-backdrop')) return;
-      setShowResults(false); setShowAdd(false); setShowTheme(false); setShowBell(false);
+      setShowResults(false); setShowAdd(false); setShowTheme(false); setShowBell(false); setShowData(false);
     };
     document.addEventListener('mousedown', close);
     return () => document.removeEventListener('mousedown', close);
   }, []);
 
   const themeOptions = THEME_OPTIONS;
+
+  /** Download a backup of everything in this browser. */
+  const exportBackup = async () => {
+    const r = await api.backupExportJson();
+    setNotice(r.ok ? `Backup saved: ${(r.data as any).filename}` : (r.error ?? 'Export failed'));
+    setShowData(false);
+  };
+
+  /** Restore from a backup file (merge, or replace when the user confirms). */
+  const importBackup = async () => {
+    const merge = confirm('Import a backup file.\n\nOK = merge with your current planner\nCancel = replace everything with the backup');
+    const r = await api.backupImportJson(merge ? 'merge' : 'restore');
+    if (r.ok) {
+      const d: any = r.data;
+      if (d.imported) { setNotice('Backup imported - reloading…'); setTimeout(() => window.location.reload(), 800); }
+      else setNotice('Import cancelled.');
+    } else {
+      setNotice(r.error ?? 'Import failed');
+    }
+    setShowData(false);
+  };
+
+  /** Ask the browser for permission to show reminder notifications. */
+  const enableReminders = async () => {
+    if (!('Notification' in window)) { setNotice('This browser does not support notifications.'); return; }
+    const p = await Notification.requestPermission();
+    setNotice(p === 'granted' ? 'Reminders enabled.' : 'Reminders were not enabled.');
+    setShowData(false);
+  };
+
 
   const quickAddItems = [
     { kind: 'task' as const, label: 'Task', icon: ListChecks },
@@ -103,7 +140,7 @@ export function Header({ title, onQuickAdd, onSearchNavigate, onToggleSidebar }:
   const ICONS: Record<string, React.ElementType> = { Task: ListChecks, Goal: Target, Note: StickyNote };
 
   return (
-    <header className="flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 shrink-0" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-secondary)' }}>
+    <header className="relative flex items-center gap-2 sm:gap-3 px-3 sm:px-5 py-3 shrink-0" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg-secondary)' }}>
       <button className="btn-secondary !px-2 lg:hidden shrink-0" title="Menu" onClick={onToggleSidebar} aria-label="Open menu">
         <MenuGlyph />
       </button>
@@ -202,6 +239,40 @@ export function Header({ title, onQuickAdd, onSearchNavigate, onToggleSidebar }:
         )}
       </div>
 
+      <div className="relative">
+        <button className="btn-secondary !px-3" title="Data & reminders" aria-label="Data and reminders"
+          onClick={() => setShowData(s => !s)}>
+          <DatabaseBackup size={16} />
+        </button>
+        {showData && (
+          <div className="absolute right-0 top-full mt-2 card p-2 z-40 w-60">
+            <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left hover:opacity-80"
+              onClick={exportBackup}>
+              <Download size={14} /> Export backup
+            </button>
+            <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left hover:opacity-80"
+              onClick={importBackup}>
+              <Upload size={14} /> Import backup
+            </button>
+            <button className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left hover:opacity-80"
+              onClick={enableReminders}>
+              <Bell size={14} /> Enable reminders
+            </button>
+            <p className="px-3 pt-2 pb-1 text-[11px] leading-snug" style={{ color: 'var(--text-secondary)' }}>
+              Your planner is stored only in this browser. Export a backup to keep a safe copy.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {notice && (
+        <div className="absolute left-2 right-2 top-full z-50">
+          <div className="card px-3 py-2 text-xs flex items-center gap-2">
+            <span className="flex-1">{notice}</span>
+            <button onClick={() => setNotice('')} className="px-2" aria-label="Dismiss">×</button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

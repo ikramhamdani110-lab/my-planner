@@ -68,54 +68,57 @@ async function importSeedIfEmpty(d: WebDatabase, r: Repos) {
         d.prepare('INSERT OR IGNORE INTO categories (name, color, icon) VALUES (?,?,?)').run(c.name, c.color, c.icon);
       }
     }
-    for (const t of seed.tables.tasks ?? []) {
-      d.prepare(`INSERT OR REPLACE INTO tasks
-        (id, title, description, start_date, end_date, start_time, end_time, category_id, priority, status, color,
-         reminder, recurrence_rule, parent_task_id, goal_id, notes, original_start_date, original_end_date,
-         original_start_time, original_end_time, is_all_day, created_at, updated_at, completed_at)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(
-        t.id, t.title, t.description, t.start_date, t.end_date, t.start_time, t.end_time, t.category_id,
-        t.priority, t.status, t.color, t.reminder, t.recurrence_rule, t.parent_task_id, t.goal_id, t.notes,
-        t.original_start_date, t.original_end_date, t.original_start_time, t.original_end_time, t.is_all_day,
-        t.created_at, t.updated_at, t.completed_at);
-    }
+
+    // Inserts run in dependency order (parents before children) because
+    // foreign keys are enforced: categories -> goals -> milestones -> tasks ->
+    // occurrences -> history -> habits -> completions -> notes -> settings.
+
     for (const g of seed.tables.goals ?? []) {
-      d.prepare(`INSERT OR REPLACE INTO goals (id, title, description, start_date, target_date, progress, status, category, priority, created_at, updated_at)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?)`).run(g.id, g.title, g.description, g.start_date, g.target_date,
-        g.progress, g.status, g.category, g.priority, g.created_at, g.updated_at);
+      insert(d, 'goals',
+        ['id', 'title', 'description', 'start_date', 'target_date', 'progress', 'status', 'category', 'priority', 'created_at', 'updated_at'],
+        g, 'INSERT OR REPLACE');
     }
     for (const m of seed.tables.milestones ?? []) {
-      d.prepare('INSERT OR REPLACE INTO milestones (id, goal_id, title, target_date, is_completed) VALUES (?,?,?,?,?)')
-        .run(m.id, m.goal_id, m.title, m.target_date, m.is_completed);
+      insert(d, 'milestones', ['id', 'goal_id', 'title', 'target_date', 'is_completed'], m, 'INSERT OR REPLACE');
+    }
+
+    // Parent tasks first, then children that reference them.
+    const all = seed.tables.tasks ?? [];
+    const ordered: any[] = [...all.filter((t: any) => !t.parent_task_id), ...all.filter((t: any) => t.parent_task_id)];
+    for (const t of ordered) {
+      insert(d, 'tasks',
+        ['id', 'title', 'description', 'start_date', 'end_date', 'start_time', 'end_time', 'category_id', 'priority',
+         'status', 'color', 'reminder', 'recurrence_rule', 'parent_task_id', 'goal_id', 'notes',
+         'original_start_date', 'original_end_date', 'original_start_time', 'original_end_time', 'is_all_day',
+         'created_at', 'updated_at', 'completed_at'],
+        t, 'INSERT OR REPLACE');
     }
     for (const o of seed.tables.task_occurrences ?? []) {
-      d.prepare(`INSERT OR REPLACE INTO task_occurrences
-        (id, series_id, occurrence_date, start_date, end_date, start_time, end_time, status, completed_at,
-         original_start_date, original_start_time, reschedule_note, created_at)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(o.id, o.series_id, o.occurrence_date, o.start_date,
-        o.end_date, o.start_time, o.end_time, o.status, o.completed_at, o.original_start_date,
-        o.original_start_time, o.reschedule_note, o.created_at ?? new Date().toISOString());
+      insert(d, 'task_occurrences',
+        ['id', 'series_id', 'occurrence_date', 'start_date', 'end_date', 'start_time', 'end_time', 'status',
+         'completed_at', 'original_start_date', 'original_start_time', 'reschedule_note'],
+        { ...o, reschedule_note: o.reschedule_note ?? null }, 'INSERT OR REPLACE');
     }
     for (const h of seed.tables.task_history ?? []) {
-      d.prepare('INSERT OR REPLACE INTO task_history (id, task_id, previous_schedule, new_schedule, change_type, reason, changed_at) VALUES (?,?,?,?,?,?,?)')
-        .run(h.id, h.task_id, h.previous_schedule, h.new_schedule, h.change_type, h.reason, h.changed_at);
+      insert(d, 'task_history',
+        ['id', 'task_id', 'previous_schedule', 'new_schedule', 'change_type', 'reason', 'changed_at'], h, 'INSERT OR REPLACE');
     }
     for (const h of seed.tables.habits ?? []) {
-      d.prepare('INSERT OR REPLACE INTO habits (id, title, description, frequency, custom_schedule, color, created_at, is_active) VALUES (?,?,?,?,?,?,?,?)')
-        .run(h.id, h.title, h.description, h.frequency, h.custom_schedule, h.color, h.created_at, h.is_active);
+      insert(d, 'habits',
+        ['id', 'title', 'description', 'frequency', 'custom_schedule', 'color', 'created_at', 'is_active'], h, 'INSERT OR REPLACE');
     }
-    for (const c of seed.tables.habit_completions ?? []) {
-      d.prepare('INSERT OR IGNORE INTO habit_completions (id, habit_id, completion_date, is_completed) VALUES (?,?,?,?)')
-        .run(c.id, c.habit_id, c.completion_date, c.is_completed);
+    for (const hc of seed.tables.habit_completions ?? []) {
+      insert(d, 'habit_completions', ['id', 'habit_id', 'completion_date', 'is_completed'], hc, 'INSERT OR IGNORE');
     }
     for (const n of seed.tables.notes ?? []) {
-      d.prepare('INSERT OR REPLACE INTO notes (id, title, content, category, is_pinned, linked_goal_id, linked_task_id, created_at, updated_at) VALUES (?,?,?,?,?,?,?,?,?)')
-        .run(n.id, n.title, n.content, n.category, n.is_pinned, n.linked_goal_id ?? null,
-          n.linked_task_id ?? null, n.created_at, n.updated_at);
+      insert(d, 'notes',
+        ['id', 'title', 'content', 'category', 'is_pinned', 'linked_goal_id', 'linked_task_id', 'created_at', 'updated_at'],
+        n, 'INSERT OR REPLACE');
     }
     for (const s of seed.tables.settings ?? []) {
-      d.prepare('INSERT OR REPLACE INTO settings (key, value) VALUES (?,?)').run(s.key, s.value);
+      insert(d, 'settings', ['key', 'value'], s, 'INSERT OR REPLACE');
     }
+
     // Keep AUTOINCREMENT counters ahead of the restored rows.
     for (const t of ['tasks', 'goals', 'notes', 'habits', 'milestones', 'task_history', 'task_occurrences', 'habit_completions', 'categories']) {
       const ok = d.prepare("SELECT 1 AS x FROM sqlite_master WHERE type='table' AND name=?").get(t);
@@ -123,6 +126,14 @@ async function importSeedIfEmpty(d: WebDatabase, r: Repos) {
     }
   })();
   return true;
+}
+
+
+/** Builds an insert whose placeholders are derived from the column list. */
+function insert(d: WebDatabase, table: string, cols: string[], row: Record<string, any>, mode = 'INSERT OR REPLACE') {
+  const marks = cols.map(() => '?').join(',');
+  const values = cols.map((k) => (row[k] === undefined ? null : row[k]));
+  d.prepare(`${mode} INTO ${table} (${cols.join(',')}) VALUES (${marks})`).run(...values);
 }
 
 /** Opens (or creates) the planner database and wires everything up. */
@@ -143,8 +154,17 @@ export async function initPlanner(): Promise<void> {
 
   if (!saved) {
     const seeded = await importSeedIfEmpty(db, repos);
-    if (seeded) await flushSave();
-    else scheduleSave();
+    if (seeded) {
+      // Materialise recurring occurrences immediately so the Calendar and
+      // Statistics have something to show on the very first visit.
+      try {
+        repos.tasks.occurrences().expandAll();
+        repos.tasks.occurrences().markMissed();
+      } catch { /* demo data still works without occurrences */ }
+      await flushSave();
+    } else {
+      scheduleSave();
+    }
   }
 
   handlers = createHandlers(db, repos);
@@ -176,8 +196,6 @@ function call<T = any>(name: string, payload: any = {}): Promise<{ ok: boolean; 
       .catch((err: any) => resolve({ ok: false, error: err?.message ?? String(err) }));
   });
 }
-
-const DISPLAY_NAME_FALLBACK = 'there';
 
 export function buildApi(): ApiBridge {
   return {
@@ -238,29 +256,15 @@ export function buildApi(): ApiBridge {
     backupExportJson: () => call('backup:exportJson'),
     backupImportJson: (mode) => call('backup:importJson', { mode }),
     backupCopyDb: () => call('backup:downloadDb'),
-    backupRestoreDb: () => Promise.resolve({ ok: true, data: { restored: false } }),
     backupResetData: () => call('backup:resetData'),
 
     /* app */
     appInfo: () => call('app:info'),
-    openPath: () => Promise.resolve({ ok: false, error: 'Not available in the browser' }),
 
     /* search & reminders */
     searchAll: (query) => call('search:all', { query }),
     notificationsList: () => call('notifications:list'),
-    notificationsUnreadCount: () => call('notifications:unreadCount'),
-
-    /*
-     * Account APIs are gone. These stubs exist only so older components keep
-     * compiling; nothing in the app calls them any more.
-     */
-    authAccounts: () => Promise.resolve({ ok: true, data: [] }),
-    authLogin: () => Promise.resolve({ ok: false, error: 'Accounts were removed.' }),
-    authCreateAccount: () => Promise.resolve({ ok: false, error: 'Accounts were removed.' }),
-    authDeleteAccount: () => Promise.resolve({ ok: false, error: 'Accounts were removed.' }),
-    authSession: () => Promise.resolve({ ok: true, data: null }),
-    authLogout: () => Promise.resolve({ ok: true, data: true }),
-    authSetTheme: (theme) => call('settings:set', { key: 'theme', value: theme })
+    notificationsUnreadCount: () => call('notifications:unreadCount')
   } as ApiBridge;
 }
 
@@ -273,4 +277,4 @@ export async function resetEverything(): Promise<void> {
   window.location.reload();
 }
 
-export { DISPLAY_NAME_FALLBACK, clearStoredDatabase };
+export { clearStoredDatabase };
