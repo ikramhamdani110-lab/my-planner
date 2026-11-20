@@ -2,33 +2,448 @@
  "app": "my-planner",
  "version": 2,
  "kind": "seed",
- "exportedAt": null,
  "tables": {
-  "categories": [
-   { "id": 1, "name": "Study", "color": "#701F39", "icon": "book" },
-   { "id": 2, "name": "Work", "color": "#87334F", "icon": "briefcase" },
-   { "id": 3, "name": "Personal", "color": "#D88AA6", "icon": "heart" },
-   { "id": 4, "name": "Health & Fitness", "color": "#4C7A5C", "icon": "activity" },
-   { "id": 5, "name": "Family", "color": "#C77D99", "icon": "users" },
-   { "id": 6, "name": "Projects", "color": "#5B5F97", "icon": "folder" },
-   { "id": 7, "name": "Other", "color": "#947584", "icon": "circle" }
+  "tasks": [
+   {
+    "id": 24,
+    "title": "Peace",
+    "description": "Give your first hour to Allah read Quran and pray",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "05:00",
+    "end_time": "06:00",
+    "category_id": 4,
+    "priority": "high",
+    "status": "completed",
+    "color": "#4ee4a3",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:40:37",
+    "updated_at": "2026-11-20 17:25:10",
+    "completed_at": "2026-11-20T17:25:10.071Z"
+   },
+   {
+    "id": 25,
+    "title": "Study",
+    "description": "Allah will reward those who works after fajr",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "06:00",
+    "end_time": "07:00",
+    "category_id": 1,
+    "priority": "medium",
+    "status": "completed",
+    "color": "#442b08",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:43:22",
+    "updated_at": "2026-11-20 17:25:16",
+    "completed_at": "2026-11-20T17:25:16.687Z"
+   },
+   {
+    "id": 26,
+    "title": "Uni",
+    "description": "Tp gl",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "08:30",
+    "end_time": "10:00",
+    "category_id": 1,
+    "priority": "medium",
+    "status": "completed",
+    "color": "#5485c4",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:44:46",
+    "updated_at": "2026-11-19 17:09:59",
+    "completed_at": "2026-11-19T17:09:59.024Z"
+   },
+   {
+    "id": 27,
+    "title": "Clipping",
+    "description": "2 clips",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "10:00",
+    "end_time": "11:30",
+    "category_id": 2,
+    "priority": "medium",
+    "status": "completed",
+    "color": "#a02b0e",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:46:17",
+    "updated_at": "2026-11-20 17:25:13",
+    "completed_at": "2026-11-20T17:25:13.637Z"
+   },
+   {
+    "id": 28,
+    "title": "uni",
+    "description": "td ihm",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "12:00",
+    "end_time": "13:30",
+    "category_id": 1,
+    "priority": "medium",
+    "status": "completed",
+    "color": "#506baa",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:48:29",
+    "updated_at": "2026-11-19 17:09:51",
+    "completed_at": "2026-11-19T17:09:51.194Z"
+   },
+   {
+    "id": 29,
+    "title": "study",
+    "description": "",
+    "start_date": "2026-11-19",
+    "end_date": "2026-11-19",
+    "start_time": "14:30",
+    "end_time": "17:00",
+    "category_id": 1,
+    "priority": "medium",
+    "status": "not_started",
+    "color": "#285235",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:49:33",
+    "updated_at": "2026-11-19 16:49:33",
+    "completed_at": null
+   },
+   {
+    "id": 30,
+    "title": "study",
+    "description": "",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "19:00",
+    "end_time": "12:00",
+    "category_id": 1,
+    "priority": "medium",
+    "status": "completed",
+    "color": "#163c18",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:50:59",
+    "updated_at": "2026-11-20 17:25:20",
+    "completed_at": "2026-11-20T17:25:20.178Z"
+   },
+   {
+    "id": 31,
+    "title": "Sleepless night",
+    "description": "",
+    "start_date": "2026-11-19",
+    "end_date": "2027-03-19",
+    "start_time": "19:00",
+    "end_time": "05:00",
+    "category_id": 1,
+    "priority": "medium",
+    "status": "not_started",
+    "color": "#0d2b1c",
+    "reminder": 10,
+    "recurrence_rule": null,
+    "parent_task_id": null,
+    "goal_id": null,
+    "notes": "",
+    "original_start_date": null,
+    "original_end_date": null,
+    "original_start_time": null,
+    "original_end_time": null,
+    "is_all_day": 0,
+    "created_at": "2026-11-19 16:54:35",
+    "updated_at": "2026-11-19 16:54:35",
+    "completed_at": null
+   }
   ],
-  "settings": [
-   { "key": "theme", "value": "dark-red" },
-   { "key": "displayName", "value": "" },
-   { "key": "weekStart", "value": "monday" },
-   { "key": "timeFormat", "value": "24h" },
-   { "key": "dateFormat", "value": "YYYY-MM-DD" },
-   { "key": "notificationsEnabled", "value": "true" },
-   { "key": "defaultReminder", "value": "10" }
+  "task_history": [
+   {
+    "id": 32,
+    "task_id": 24,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"05:00\",\"endTime\":\"06:00\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:40:37"
+   },
+   {
+    "id": 33,
+    "task_id": 25,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"06:00\",\"endTime\":\"07:00\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:43:22"
+   },
+   {
+    "id": 34,
+    "task_id": 26,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"08:30\",\"endTime\":\"10:00\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:44:46"
+   },
+   {
+    "id": 35,
+    "task_id": 27,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"10:00\",\"endTime\":\"11:30\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:46:17"
+   },
+   {
+    "id": 36,
+    "task_id": 28,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"00:00\",\"endTime\":\"13:30\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:48:29"
+   },
+   {
+    "id": 37,
+    "task_id": 29,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2026-11-19\",\"startTime\":\"14:30\",\"endTime\":\"17:00\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:49:33"
+   },
+   {
+    "id": 38,
+    "task_id": 30,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"19:00\",\"endTime\":\"12:00\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:50:59"
+   },
+   {
+    "id": 39,
+    "task_id": 28,
+    "previous_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"00:00\",\"endTime\":\"13:30\"}",
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"12:00\",\"endTime\":\"13:30\"}",
+    "change_type": "schedule_changed",
+    "reason": null,
+    "changed_at": "2026-11-19 16:51:48"
+   },
+   {
+    "id": 40,
+    "task_id": 31,
+    "previous_schedule": null,
+    "new_schedule": "{\"startDate\":\"2026-11-19\",\"endDate\":\"2027-03-19\",\"startTime\":\"19:00\",\"endTime\":\"05:00\"}",
+    "change_type": "created",
+    "reason": null,
+    "changed_at": "2026-11-19 16:54:35"
+   },
+   {
+    "id": 41,
+    "task_id": 28,
+    "previous_schedule": "not_started",
+    "new_schedule": "completed",
+    "change_type": "status_changed",
+    "reason": null,
+    "changed_at": "2026-11-19 17:09:51"
+   },
+   {
+    "id": 42,
+    "task_id": 26,
+    "previous_schedule": "not_started",
+    "new_schedule": "completed",
+    "change_type": "status_changed",
+    "reason": null,
+    "changed_at": "2026-11-19 17:09:59"
+   },
+   {
+    "id": 45,
+    "task_id": 24,
+    "previous_schedule": "not_started",
+    "new_schedule": "completed",
+    "change_type": "status_changed",
+    "reason": null,
+    "changed_at": "2026-11-20 17:25:10"
+   },
+   {
+    "id": 46,
+    "task_id": 27,
+    "previous_schedule": "not_started",
+    "new_schedule": "completed",
+    "change_type": "status_changed",
+    "reason": null,
+    "changed_at": "2026-11-20 17:25:13"
+   },
+   {
+    "id": 47,
+    "task_id": 25,
+    "previous_schedule": "not_started",
+    "new_schedule": "completed",
+    "change_type": "status_changed",
+    "reason": null,
+    "changed_at": "2026-11-20 17:25:16"
+   },
+   {
+    "id": 48,
+    "task_id": 30,
+    "previous_schedule": "not_started",
+    "new_schedule": "completed",
+    "change_type": "status_changed",
+    "reason": null,
+    "changed_at": "2026-11-20 17:25:20"
+   }
   ],
-  "tasks": [],
-  "task_history": [],
-  "goals": [],
+  "goals": [
+   {
+    "id": 1,
+    "title": "asdxcfgvyuhjikopl[;",
+    "description": "edrtfgyuh8jikopl[",
+    "start_date": "2026-11-20",
+    "target_date": "2027-09-10",
+    "progress": 0,
+    "status": "completed",
+    "category": "Other",
+    "priority": "urgent",
+    "created_at": "2026-11-20 12:18:51",
+    "updated_at": "2026-11-20 17:24:30"
+   }
+  ],
   "milestones": [],
   "habits": [],
   "habit_completions": [],
   "notes": [],
+  "categories": [
+   {
+    "id": 1,
+    "name": "Study",
+    "color": "#701F39",
+    "icon": "book"
+   },
+   {
+    "id": 2,
+    "name": "Work",
+    "color": "#87334F",
+    "icon": "briefcase"
+   },
+   {
+    "id": 3,
+    "name": "Personal",
+    "color": "#D88AA6",
+    "icon": "heart"
+   },
+   {
+    "id": 4,
+    "name": "Health & Fitness",
+    "color": "#4C7A5C",
+    "icon": "activity"
+   },
+   {
+    "id": 5,
+    "name": "Family",
+    "color": "#C77D99",
+    "icon": "users"
+   },
+   {
+    "id": 6,
+    "name": "Projects",
+    "color": "#5B5F97",
+    "icon": "folder"
+   },
+   {
+    "id": 7,
+    "name": "Other",
+    "color": "#947584",
+    "icon": "circle"
+   }
+  ],
+  "settings": [
+   {
+    "key": "theme",
+    "value": "dark-red"
+   },
+   {
+    "key": "displayName",
+    "value": "Ikram"
+   },
+   {
+    "key": "weekStart",
+    "value": "sunday"
+   },
+   {
+    "key": "timeFormat",
+    "value": "24h"
+   },
+   {
+    "key": "dateFormat",
+    "value": "DD/MM/YYYY"
+   },
+   {
+    "key": "notificationsEnabled",
+    "value": "true"
+   },
+   {
+    "key": "defaultReminder",
+    "value": "10"
+   }
+  ],
+  "notifications": [],
   "task_occurrences": []
  }
 }

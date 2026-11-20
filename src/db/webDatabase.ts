@@ -15,9 +15,11 @@
  * rescheduling logic and all statistics queries behave exactly as they did on
  * the desktop.
  */
-import initSqlJs, { type Database as SqlJsDatabase, type SqlJsStatic } from 'sql.js';
-// Vite turns this into a hashed asset URL and emits the file into the build.
-import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
+import * as SqlJsModule from 'sql.js';
+import type { Database as SqlJsDatabase } from 'sql.js';
+
+/** sql.js exposes its initialiser as the default (CJS) or as `initSqlJs` (ESM interop). */
+const initSqlJs: any = (SqlJsModule as any).default ?? (SqlJsModule as any).initSqlJs ?? SqlJsModule;
 
 type SqlValue = string | number | null | Uint8Array;
 
@@ -51,6 +53,45 @@ function normalize(args: any[]): SqlValue[] {
 }
 
 /** sql.js returns column values positionally; convert to plain objects. */
+
+/**
+ * Loads the sql.js WebAssembly binary at runtime.
+ *
+ * The build tool rewrites static asset imports differently in development and
+ * production, so the binary is fetched here instead. Vite copies the file into
+ * `dist/assets/` at build time (see vite.config.ts); the development server
+ * serves it straight from node_modules.
+ */
+let wasmBytes: ArrayBuffer | null = null;
+
+async function loadWasmBinary(): Promise<ArrayBuffer> {
+  if (wasmBytes) return wasmBytes;
+  const candidates = [
+    new URL('./sql-wasm.wasm', import.meta.url).href,
+    new URL('assets/sql-wasm.wasm', document.baseURI).href,
+    new URL('node_modules/sql.js/dist/sql-wasm.wasm', document.baseURI).href
+  ];
+  let lastError = 'unknown error';
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) { lastError = `${res.status} for ${url}`; continue; }
+      const buf = await res.arrayBuffer();
+      // A 32-bit wasm module always starts with 0x00 0x61 0x73 0x6D.
+      const magic = new Uint8Array(buf, 0, 4);
+      if (magic[0] !== 0x00 || magic[1] !== 0x61 || magic[2] !== 0x73 || magic[3] !== 0x6D) {
+        lastError = `${url} did not return a WebAssembly module`;
+        continue;
+      }
+      wasmBytes = buf;
+      return buf;
+    } catch (err: any) {
+      lastError = `${url}: ${err?.message ?? err}`;
+    }
+  }
+  throw new Error('Could not load the SQLite engine (sql-wasm.wasm). ' + lastError);
+}
+
 export class WebDatabase {
   private db: SqlJsDatabase;
   /** Resume point for nested transactions (SQLite has no nested BEGIN). */
@@ -62,10 +103,8 @@ export class WebDatabase {
 
   /** Loads WASM and opens either a fresh in-memory DB or one restored from bytes. */
   static async open(bytes?: Uint8Array | null): Promise<WebDatabase> {
-    const sql = await initSqlJs({
-      // Ignore the requested filename: Vite hashed it at build time.
-      locateFile: (file: string) => (file.endsWith('.wasm') ? wasmUrl : file)
-    } as any);
+    const wasmBinary = await loadWasmBinary();
+    const sql = await initSqlJs({ wasmBinary } as any);
     const db = bytes && bytes.length ? new sql.Database(bytes) : new sql.Database();
     const self = new WebDatabase(db);
     self.db.run('PRAGMA foreign_keys = ON');
