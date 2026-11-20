@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #1C1015;
+  --bg-secondary: #291820;
+  --card: #38212B;
+  --card-hover: #422933;
+  --primary: #701F39;
+  --primary-dark: #481323;
+  --accent: #D88AA6;
+  --accent-soft: #F1C4D3;
+  --on-primary: #FFF1F5;
+  --text: #FFF1F5;
+  --text-secondary: #BFA8B1;
+  --border: rgba(216, 138, 166, 0.18);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+html.theme-baby-pink {
+  --bg: #FFF5F8;
+  --bg-secondary: #FCE8EF;
+  --card: #FFFFFF;
+  --card-hover: #FFF0F5;
+  --primary: #E8A9BE;
+  --primary-dark: #C77D99;
+  --accent: #87334F;
+  --accent-soft: #F7D3DE;
+  --on-primary: #422532;
+  --text: #422532;
+  --text-secondary: #947584;
+  --border: rgba(135, 51, 79, 0.14);
+  --shadow: 0 8px 24px rgba(135, 51, 79, 0.10);
+}
+
+html.theme-dark-blue {
+  --bg: #0E1626;
+  --bg-secondary: #16233A;
+  --card: #1E304C;
+  --card-hover: #263A5A;
+  --primary: #2E5C9E;
+  --primary-dark: #1D3E70;
+  --accent: #7FA8E0;
+  --accent-soft: #D6E4F7;
+  --on-primary: #EDF4FD;
+  --text: #EDF4FD;
+  --text-secondary: #9BAECB;
+  --border: rgba(127, 168, 224, 0.20);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.40);
+}
+
+html.theme-baby-blue {
+  --bg: #F2F8FD;
+  --bg-secondary: #E3EFF9;
+  --card: #FFFFFF;
+  --card-hover: #EDF5FC;
+  --primary: #9CC3E8;
+  --primary-dark: #6FA6D6;
+  --accent: #2E5C9E;
+  --accent-soft: #D9E9F8;
+  --on-primary: #1D3A5C;
+  --text: #1D3A5C;
+  --text-secondary: #63809E;
+  --border: rgba(46, 92, 158, 0.16);
+  --shadow: 0 8px 24px rgba(46, 92, 158, 0.10);
+}
+
+html.theme-baby-blue .btn-danger { background: #2E5C9E; color: #fff; }
+html.theme-dark-blue .btn-danger { background: #8a2740; color: #fff; }
+
+html, body, #root { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+* { transition: background-color 0.25s ease, border-color 0.25s ease, color 0.2s ease; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--primary-dark); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+@layer components {
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1rem;
+    box-shadow: var(--shadow);
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-medium select-none;
+    border-radius: 0.75rem;
+    background: var(--primary);
+    color: var(--on-primary);
+    border: none;
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-4 py-2 text-sm font-medium;
+    border-radius: 0.75rem;
+    background: var(--bg-secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--card-hover); }
+  .btn-danger { background: #8a2740; color: #fff; }
+  html.theme-baby-pink .btn-danger { background: #B04a67; color: #fff; }
+  .input {
+    @apply w-full px-3 py-2 text-sm outline-none;
+    border-radius: 0.75rem;
+    background: var(--bg-secondary);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .input:focus { border-color: var(--accent); }
+  .input option { background: var(--bg-secondary); color: var(--text); }
+  .label { @apply block text-xs font-medium mb-1 uppercase tracking-wide; color: var(--text-secondary); }
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 text-xs font-medium;
+    border-radius: 9999px;
+  }
+  .chip {
+    @apply px-3 py-1.5 text-xs font-medium cursor-pointer select-none;
+    border-radius: 9999px;
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+  }
+  .chip.active { background: var(--primary); color: var(--on-primary); border-color: var(--primary-dark); }
+}
+
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+}
+
+/* Fixes for nav/layout: allow inner pages to scroll without double scrollbars */
+aside nav { overflow-y: auto; }
+main { overflow: hidden; }
+button { cursor: pointer; }

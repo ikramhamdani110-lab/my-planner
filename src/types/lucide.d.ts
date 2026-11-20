@@ -1,0 +1,58 @@
+declare module 'lucide-react' {
+  import * as React from 'react';
+  export interface LucideProps extends React.SVGProps<SVGSVGElement> {
+    size?: number | string;
+    color?: string;
+    strokeWidth?: number | string;
+  }
+  export type LucideIcon = (props: LucideProps) => React.ReactElement;
+  export const LayoutDashboard: LucideIcon;
+  export const CalendarDays: LucideIcon;
+  export const ListChecks: LucideIcon;
+  export const Target: LucideIcon;
+  export const Repeat: LucideIcon;
+  export const BarChart3: LucideIcon;
+  export const StickyNote: LucideIcon;
+  export const Settings: LucideIcon;
+  export const ChevronsLeft: LucideIcon;
+  export const ChevronsRight: LucideIcon;
+  export const Search: LucideIcon;
+  export const Plus: LucideIcon;
+  export const Bell: LucideIcon;
+  export const Palette: LucideIcon;
+  export const Monitor: LucideIcon;
+  export const Moon: LucideIcon;
+  export const Sun: LucideIcon;
+  export const FileText: LucideIcon;
+  export const X: LucideIcon;
+  export const Clock: LucideIcon;
+  export const Flag: LucideIcon;
+  export const CheckCircle2: LucideIcon;
+  export const Circle: LucideIcon;
+  export const AlertCircle: LucideIcon;
+  export const RotateCcw: LucideIcon;
+  export const XCircle: LucideIcon;
+  export const Pencil: LucideIcon;
+  export const History: LucideIcon;
+  export const Trash2: LucideIcon;
+  export const AlertTriangle: LucideIcon;
+  export const ChevronLeft: LucideIcon;
+  export const ChevronRight: LucideIcon;
+  export const CalendarPlus: LucideIcon;
+  export const CheckSquare: LucideIcon;
+  export const Square: LucideIcon;
+  export const Link: LucideIcon;
+  export const Flame: LucideIcon;
+  export const Pin: LucideIcon;
+  export const Check: LucideIcon;
+  export const Download: LucideIcon;
+  export const Upload: LucideIcon;
+  export const DatabaseBackup: LucideIcon;
+  export const Info: LucideIcon;
+  export const User: LucideIcon;
+  export const LogOut: LucideIcon;
+  export const Lock: LucideIcon;
+  export const UserPlus: LucideIcon;
+  export const ArrowLeft: LucideIcon;
+  export const Sunrise: LucideIcon;
+}
