@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useState } from 'react';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { UIProvider, useUI } from '@/contexts/UIContext';
 import { Sidebar, Page } from '@/components/layout/Sidebar';
@@ -8,11 +8,14 @@ import { HomePage } from '@/pages/Home/HomePage';
 import { CalendarPage } from '@/pages/Calendar/CalendarPage';
 import { TasksPage } from '@/pages/Tasks/TasksPage';
 import { GoalsPage } from '@/pages/Goals/GoalsPage';
-import { StatisticsPage } from '@/pages/Statistics/StatisticsPage';
 import { NotesPage } from '@/pages/Notes/NotesPage';
 import { api } from '@/services/api';
 import type { ThemeMode } from '@/types';
 import { initPlanner } from '@/services/plannerApi';
+
+// Statistics pulls in the charting library; load it only when opened.
+const StatisticsPage = lazy(() => import('@/pages/Statistics/StatisticsPage')
+  .then(m => ({ default: m.StatisticsPage })));
 
 const TITLES: Record<Page, string> = {
   home: 'Home', calendar: 'Calendar', tasks: 'Tasks', goals: 'Goals',
@@ -88,7 +91,11 @@ function Shell() {
           {page === 'calendar' && <CalendarPage focusTaskId={focusTaskId} />}
           {page === 'tasks' && <TasksPage focusTaskId={focusTaskId} />}
           {page === 'goals' && <GoalsPage />}
-          {page === 'statistics' && <StatisticsPage />}
+          {page === 'statistics' && (
+            <Suspense fallback={<div className="p-6 text-sm" style={{ color: 'var(--text-secondary)' }}>Loading statistics…</div>}>
+              <StatisticsPage />
+            </Suspense>
+          )}
           {page === 'notes' && <NotesPage />}
         </main>
       </div>

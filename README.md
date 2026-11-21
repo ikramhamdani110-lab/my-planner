@@ -65,18 +65,17 @@ your browser's storage.
 - **Browser storage can be cleared** by the browser itself when disk space is low, or by "clear browsing data".
   **Export a backup regularly.**
 - **Reminders only fire while a My Planner tab is open.** A website cannot run in the background after you close it.
-  Browser notifications must also be allowed in Settings.
+  Browser notifications must also be allowed from the data menu in the header.
 - **There is no password.** Anyone with access to your browser profile can open the planner. Use your device's
   own user account or screen lock if that matters.
 
 ### Backups
 
-Settings → **Your data**:
+Use the **(database) menu in the header** — it is available on every page:
 
-- **Export backup (JSON)** — a full, readable copy of tasks, goals, notes, history and settings.
-- **Import backup** — merge into your current data, or replace everything with the file.
-- **Download database (.db)** — the raw SQLite file, openable with any SQLite tool.
-- **Reset all data** — wipes the planner after asking for confirmation.
+- **Export backup** — downloads a full, readable copy of tasks, goals, notes, history and settings.
+- **Import backup** — merge into your current planner, or replace everything with the file.
+- **Enable reminders** — asks the browser for notification permission.
 
 If you want a copy of the original desktop data, `scripts/export-seed.py` exports an existing
 `my-planner.db` into the JSON format used by the app.
@@ -92,7 +91,7 @@ src/
     webDatabase.ts   sql.js + a better-sqlite3-compatible query API
     migrations.ts    Schema and data migrations
     repositories/    Tasks, goals, habits, notes, settings
-  pages/          Home, Calendar, Tasks, Goals, Statistics, Notes, Settings
+  pages/          Home, Calendar, Tasks, Goals, Statistics, Notes
   services/       API bridge, browser handlers, reminders, file helpers
   data/seed.json  Starting dataset for a brand-new browser
 public/           Favicon and app icons

@@ -297,7 +297,7 @@ export function createHandlers(db: WebDatabase, repos: Repos) {
     const rows = db.prepare(
       `SELECT n.id, n.task_id, n.scheduled_at, n.fired, t.title, t.status
        FROM notifications n JOIN tasks t ON t.id = n.task_id
-       WHERE n.task_id IN (SELECT id FROM tasks WHERE account_id = ?)
+       WHERE n.task_id IN (SELECT id FROM tasks)
        ORDER BY n.scheduled_at DESC LIMIT 30`).all();
     return rows;
   });

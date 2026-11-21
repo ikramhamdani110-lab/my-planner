@@ -34,6 +34,7 @@ export class ReminderService {
         "UPDATE notifications SET fired = 1 WHERE fired = 0 AND is_active = 1 AND scheduled_at < datetime('now', '-1 hour')"
       ).run();
     } catch { /* ignore */ }
+    this.scheduleAll();
     this.tick();
     this.timer = window.setInterval(() => this.tick(), CHECK_INTERVAL);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) this.tick(); });
@@ -43,6 +44,7 @@ export class ReminderService {
 
   /** Called after any data change so pending reminders reflect the new state. */
   sync() {
+    this.scheduleAll();
     try {
       this.db.prepare(
         "UPDATE notifications SET fired = 1 WHERE fired = 0 AND is_active = 1 AND scheduled_at < datetime('now', '-1 hour')"
@@ -61,6 +63,42 @@ export class ReminderService {
     if (!('Notification' in window)) return 'denied';
     if (Notification.permission !== 'default') return Notification.permission;
     try { return await Notification.requestPermission(); } catch { return 'denied'; }
+  }
+
+  /**
+   * Creates one notification row per upcoming task that has a reminder.
+   * Completed, missed and past tasks are skipped; existing rows are updated.
+   */
+  private scheduleAll() {
+    try {
+      const tasks = this.db.prepare(
+        `SELECT id, start_date, start_time, reminder, status FROM tasks
+         WHERE reminder IS NOT NULL AND reminder >= 0
+           AND status NOT IN ('completed', 'missed')`).all() as any[];
+
+      const upsert = this.db.prepare(
+        `INSERT INTO notifications (task_id, scheduled_at, reminder_type, is_active, fired)
+         VALUES (?,?,?,1,0)
+         ON CONFLICT(task_id, reminder_type)
+         DO UPDATE SET scheduled_at = excluded.scheduled_at, is_active = 1`);
+
+      const drop = this.db.prepare('DELETE FROM notifications WHERE task_id = ?');
+
+      for (const t of tasks) {
+        const when = this.computeTime(t.start_date, t.start_time, Number(t.reminder));
+        if (!when) { drop.run(t.id); continue; }
+        // Only schedule reminders that are still in the future.
+        if (new Date(when).getTime() <= Date.now()) { drop.run(t.id); continue; }
+        upsert.run(t.id, when, String(t.reminder));
+      }
+    } catch { /* reminders must never break the app */ }
+  }
+
+  private computeTime(date: string, time: string, minutes: number): string | null {
+    const dt = new Date(`${date}T${(time || '00:00').slice(0, 5)}:00`);
+    if (isNaN(dt.getTime())) return null;
+    dt.setMinutes(dt.getMinutes() - minutes);
+    return dt.toISOString();
   }
 
   private tick() {
