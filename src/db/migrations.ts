@@ -140,16 +140,11 @@ const MIGRATIONS: { version: number; sql: string }[] = [
     `
   },
   {
+    // Kept as an empty step: version 2 used to create the accounts table for
+    // the desktop build's login system. Accounts were removed, so nothing is
+    // created and existing databases simply advance their schema version.
     version: 2,
     sql: `
-    CREATE TABLE IF NOT EXISTS accounts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      password_hash TEXT NOT NULL,
-      salt TEXT NOT NULL,
-      theme TEXT NOT NULL DEFAULT 'dark-red',
-      created_at TEXT NOT NULL DEFAULT (datetime('now'))
-    );
     `
   },
   {
